@@ -1,5 +1,5 @@
 import './App.css';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 function App() {
 
@@ -21,6 +21,9 @@ function App() {
   ];
 
   let grid = emptyGrid;
+  const [gridState,setGridState] = useState(emptyGrid);
+  const [restart,setRestart] = useState(false);
+  const [timer,setTimer] = useState(0);
   const bombCounter = 10;
   const boardSize = 9;
 
@@ -61,11 +64,17 @@ function App() {
         }
     }
     console.log(grid)
+    setGridState(grid)
   }
 
   useEffect(() => {
     newGame();
-  },[])
+    const intervalId = setInterval(() => {
+      setTimer((prevTimer) => prevTimer + 1);
+    }, 1000)
+  },restart)
+
+  //timer
 
   return (
     <div className="App">
@@ -75,16 +84,29 @@ function App() {
             <div className = "bomb-counter">
               {bombCounter}
             </div>
-            <div className = "reset-button">
-              
-            </div>
+            <button className = "reset-button" onClick={()=>{setRestart(true);setTimer(0)}}>
+              : )
+            </button>
             <div className = "timer">
-
+              {timer}
             </div>
         </div>
-          {}
-        <div className='grid'>
           
+        <div className='grid'>
+          {gridState.map((row,rowIdx)=>{
+            return(<div key={rowIdx} className={`row ${rowIdx}`}>
+              {
+                row.map((square,squareIdx)=>{
+                  return(
+                  <div key={squareIdx} className={`square ${squareIdx}`}>
+                    {square}
+                  </div>
+                  )
+                })
+              }
+            </div>
+            )
+          })}
         </div>
       </div>
     </div>
