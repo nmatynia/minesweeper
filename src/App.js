@@ -25,8 +25,9 @@ function App() {
   const [restart,setRestart] = useState(false);
   const [timer,setTimer] = useState(0);
   const [bombCounter,setBombCounter] = useState(10);
-  const boardSize = 9;
-
+  const [boardSize,setBoardSize] = useState(9);
+  const [lostGame, setLostGame] = useState(false)
+  const [visible,setVisble] = useState(false)
   //checks how many bombs are around this square
   const bombCheck = (y,x,y1,x1) =>{
     try{
@@ -66,14 +67,31 @@ function App() {
     console.log(grid)
     setGridState(grid)
   }
+
+  const handleLeftClick = (e) => {
+    if(e.target.value == -1){
+      setLostGame(true)
+    }
+    else if(e.target.value > 0){
+
+    }else if(e.target.value == 0){
+
+    }
+  }
+  // displays gird array as html element
   const displayGrid = () => {
     return gridState.map((row,rowIdx)=>{
       return(<div key={rowIdx} className={`row ${rowIdx}`}>
         {
           row.map((square,squareIdx)=>{
             return(
-            <div key={squareIdx} className={`square ${squareIdx}`}>
-              {square}
+            <div 
+              key={squareIdx} 
+              className={`square ${squareIdx}`} 
+              value={square}
+              onClick={handleLeftClick}
+            >
+                {square}
             </div>
             )
           })
@@ -87,7 +105,7 @@ function App() {
     const intervalId = setInterval(() => {
       setTimer((prevTimer) => prevTimer + 1);
     }, 1000)
-  },restart)
+  },[])
 
   //timer
 
@@ -99,8 +117,8 @@ function App() {
             <div className = "bomb-counter">
               {bombCounter}
             </div>
-            <button className = "reset-button" onClick={()=>{setRestart(true);setTimer(0)}}>
-              :)
+            <button className = "reset-button" onClick={()=>{setTimer(0); newGame()}}>
+              ;)
             </button>
             <div className = "timer">
               {timer}
